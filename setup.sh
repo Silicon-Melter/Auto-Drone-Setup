@@ -7,7 +7,7 @@ ROOT_DIR="$HOME/Documents/drone"
 QGROUND_CONTROL_ID="1i7bTphxp1nTKliYOknPK-8sS0kDPrX-R"
 OMNIVERSE_APPIMAGE_ID="13D4dIyjEOET8Qpz3zdlI8_NpO3uUi351"
 ISAAC_SIM_ZIP_ID="1-Hmt-FGNviP6mIsP3jNxUjQ5Q6-UUiqD"
-CONDA_ENV_ID="1Xol9W6EeXwk-RfjQNzxZbuAYzP5zUftZ"
+CONDA_ENV_ID="18zFfWXiesDBFeNcTfZsaaCiU2vgtF5_g"
 
 # Create root directory
 mkdir -p $ROOT_DIR
@@ -16,43 +16,6 @@ cd $ROOT_DIR
 # Install system dependencies
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y locales curl git unzip
-
-# Install Anaconda if not already downloaded
-if [ ! -f "$ROOT_DIR/anaconda.sh" ]; then
-    wget https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O $ROOT_DIR/anaconda.sh
-fi
-bash $ROOT_DIR/anaconda.sh -b -p $ROOT_DIR/anaconda3
-
-# Ensure Conda is available
-export PATH="$ROOT_DIR/anaconda3/bin:$PATH"
-echo "export PATH=\"$ROOT_DIR/anaconda3/bin:\$PATH\"" >> ~/.bashrc
-source ~/.bashrc
-
-# Initialize Conda
-$ROOT_DIR/anaconda3/bin/conda init bash
-source ~/.bashrc
-source $ROOT_DIR/anaconda3/bin/activate
-
-# Ensure pip uses the Conda environment
-pip install --upgrade pip
-
-# Install gdown for Google Drive file downloads
-pip install --upgrade gdown
-
-# Download all required files using gdown if not already downloaded
-if [ ! -f "$ROOT_DIR/QGroundControl.AppImage" ]; then
-    gdown --id $QGROUND_CONTROL_ID -O $ROOT_DIR/QGroundControl.AppImage
-fi
-if [ ! -f "$ROOT_DIR/Omniverse.AppImage" ]; then
-    gdown --id $OMNIVERSE_APPIMAGE_ID -O $ROOT_DIR/Omniverse.AppImage
-fi
-if [ ! -f "$ROOT_DIR/isaac_sim.zip" ]; then
-    gdown --id $ISAAC_SIM_ZIP_ID -O $ROOT_DIR/isaac_sim.zip
-fi
-if [ ! -f "$ROOT_DIR/drone_env.tar.gz" ]; then
-    gdown --id $CONDA_ENV_ID -O $ROOT_DIR/drone_env.tar.gz
-fi
-chmod +x $ROOT_DIR/QGroundControl.AppImage $ROOT_DIR/Omniverse.AppImage
 
 # Check if Anaconda is already installed
 if [ -d "$ROOT_DIR/anaconda3" ]; then
@@ -76,6 +39,24 @@ source $ROOT_DIR/anaconda3/bin/activate
 
 # Ensure pip uses the Conda environment
 pip install --upgrade pip
+
+# Install gdown for Google Drive file downloads
+pip install --upgrade gdown
+
+# Download all required files using gdown
+gdown --id $QGROUND_CONTROL_ID -O $ROOT_DIR/QGroundControl.AppImage
+gdown --id $OMNIVERSE_APPIMAGE_ID -O $ROOT_DIR/Omniverse.AppImage
+gdown --id $ISAAC_SIM_ZIP_ID -O $ROOT_DIR/isaac_sim.zip
+gdown --id $CONDA_ENV_ID -O $ROOT_DIR/drone_env.tar.gz
+chmod +x $ROOT_DIR/QGroundControl.AppImage $ROOT_DIR/Omniverse.AppImage
+
+# Import Conda environment
+mkdir -p $ROOT_DIR/conda_envs
+mv $ROOT_DIR/drone_env.tar.gz $ROOT_DIR/conda_envs/
+cd $ROOT_DIR/conda_envs
+tar -xzf drone_env.tar.gz
+conda env create -f drone_env.yaml
+conda activate drone
 
 # Install Python3 Colcon Extensions
 sudo apt install -y python3-colcon-common-extensions
@@ -105,7 +86,7 @@ sudo apt install -y gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl
 sudo apt install -y libfuse2 libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev
 
 # Extract Isaac Sim
-unzip -o $ROOT_DIR/isaac_sim.zip -d $ROOT_DIR
+unzip $ROOT_DIR/isaac_sim.zip -d $ROOT_DIR
 export ISAACSIM_PATH="$ROOT_DIR/isaac_sim"
 echo "export ISAACSIM_PATH=\"$ROOT_DIR/isaac_sim\"" >> ~/.bashrc
 echo "alias ISAACSIM_PYTHON=\"\$ISAACSIM_PATH/python.sh\"" >> ~/.bashrc
