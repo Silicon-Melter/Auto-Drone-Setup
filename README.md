@@ -27,4 +27,4 @@ chmod ./setup.sh
 ```
 
 ### **4. Setup Pegasus Simulator on Isaac Sim**
-[Follow this link](https://pegasussimulator.github.io/PegasusSimulator/source/setup/installation.html)
+[Follow this link](https://pegasussimulator.github.io/PegasusSimulator/source/setup/installation.html#installing-the-pegasus-simulator)
