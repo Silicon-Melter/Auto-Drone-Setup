@@ -23,7 +23,7 @@ chmod +x setup.sh
 
 ### **3. Execute setup.sh**
 ```bash
-chmod ./setup.sh
+./setup.sh
 ```
 
 ### **4. Setup Pegasus Simulator on Isaac Sim**
