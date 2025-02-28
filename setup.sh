@@ -54,13 +54,28 @@ if [ ! -f "$ROOT_DIR/drone_env.tar.gz" ]; then
 fi
 chmod +x $ROOT_DIR/QGroundControl.AppImage $ROOT_DIR/Omniverse.AppImage
 
-# Import Conda environment
-mkdir -p $ROOT_DIR/conda_envs
-mv $ROOT_DIR/drone_env.tar.gz $ROOT_DIR/conda_envs/
-cd $ROOT_DIR/conda_envs
-tar -xzf drone_env.tar.gz
-conda env create -f drone_env.yaml
-source $ROOT_DIR/anaconda3/bin/activate drone
+# Check if Anaconda is already installed
+if [ -d "$ROOT_DIR/anaconda3" ]; then
+    echo "Anaconda already installed in $ROOT_DIR/anaconda3"
+else
+    # Install Anaconda if not already installed
+    echo "Installing Anaconda..."
+    wget https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O $ROOT_DIR/anaconda.sh
+    bash $ROOT_DIR/anaconda.sh -b -p $ROOT_DIR/anaconda3
+
+    # Initialize Conda
+    export PATH="$ROOT_DIR/anaconda3/bin:$PATH"
+    echo "export PATH=\"$ROOT_DIR/anaconda3/bin:\$PATH\"" >> ~/.bashrc
+    source ~/.bashrc
+    $ROOT_DIR/anaconda3/bin/conda init bash
+    source ~/.bashrc
+fi
+
+# Ensure Conda is available
+source $ROOT_DIR/anaconda3/bin/activate
+
+# Ensure pip uses the Conda environment
+pip install --upgrade pip
 
 # Install Python3 Colcon Extensions
 sudo apt install -y python3-colcon-common-extensions
