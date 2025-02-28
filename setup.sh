@@ -7,7 +7,7 @@ ROOT_DIR="$HOME/Documents/drone"
 QGROUND_CONTROL_ID="1i7bTphxp1nTKliYOknPK-8sS0kDPrX-R"
 OMNIVERSE_APPIMAGE_ID="13D4dIyjEOET8Qpz3zdlI8_NpO3uUi351"
 ISAAC_SIM_ZIP_ID="1-Hmt-FGNviP6mIsP3jNxUjQ5Q6-UUiqD"
-CONDA_ENV_ID="18zFfWXiesDBFeNcTfZsaaCiU2vgtF5_g"
+CONDA_ENV_ID="1Xol9W6EeXwk-RfjQNzxZbuAYzP5zUftZ"
 
 # Create root directory
 mkdir -p $ROOT_DIR
@@ -43,13 +43,19 @@ pip install --upgrade pip
 # Install gdown for Google Drive file downloads
 pip install --upgrade gdown
 
-# Download all required files using gdown
-gdown --id $QGROUND_CONTROL_ID -O $ROOT_DIR/QGroundControl.AppImage
-gdown --id $OMNIVERSE_APPIMAGE_ID -O $ROOT_DIR/Omniverse.AppImage
-gdown --id $ISAAC_SIM_ZIP_ID -O $ROOT_DIR/isaac_sim.zip
-gdown --id $CONDA_ENV_ID -O $ROOT_DIR/drone_env.tar.gz
-chmod +x $ROOT_DIR/QGroundControl.AppImage $ROOT_DIR/Omniverse.AppImage
-
+# Download all required files using gdown if not already downloaded
+if [ ! -f "$ROOT_DIR/QGroundControl.AppImage" ]; then
+    gdown --id $QGROUND_CONTROL_ID -O $ROOT_DIR/QGroundControl.AppImage
+fi
+if [ ! -f "$ROOT_DIR/Omniverse.AppImage" ]; then
+    gdown --id $OMNIVERSE_APPIMAGE_ID -O $ROOT_DIR/Omniverse.AppImage
+fi
+if [ ! -f "$ROOT_DIR/isaac_sim.zip" ]; then
+    gdown --id $ISAAC_SIM_ZIP_ID -O $ROOT_DIR/isaac_sim.zip
+fi
+if [ ! -f "$ROOT_DIR/drone_env.tar.gz" ]; then
+    gdown --id $CONDA_ENV_ID -O $ROOT_DIR/drone_env.tar.gz
+fi
 # Import Conda environment
 mkdir -p $ROOT_DIR/conda_envs
 mv $ROOT_DIR/drone_env.tar.gz $ROOT_DIR/conda_envs/
