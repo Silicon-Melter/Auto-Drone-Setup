@@ -53,15 +53,14 @@ fi
 if [ ! -f "$ROOT_DIR/isaac_sim.zip" ]; then
     gdown --id $ISAAC_SIM_ZIP_ID -O $ROOT_DIR/isaac_sim.zip
 fi
-if [ ! -f "$ROOT_DIR/drone_env.tar.gz" ]; then
-    gdown --id $CONDA_ENV_ID -O $ROOT_DIR/drone_env.tar.gz
+if [ ! -f "$ROOT_DIR/drone_env.yml" ]; then
+    gdown --id $CONDA_ENV_YML_ID -O $ROOT_DIR/drone_env.yml
 fi
 # Import Conda environment
 mkdir -p $ROOT_DIR/conda_envs
-mv $ROOT_DIR/drone_env.tar.gz $ROOT_DIR/conda_envs/
+mv $ROOT_DIR/drone_env.yml $ROOT_DIR/conda_envs/
 cd $ROOT_DIR/conda_envs
-tar -xzf drone_env.tar.gz
-conda env create -f drone_env.yaml
+conda env create -f drone_env.yml
 conda activate drone
 
 # Install Python3 Colcon Extensions
