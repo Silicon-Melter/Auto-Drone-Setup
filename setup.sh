@@ -54,7 +54,7 @@ if [ ! -f "$ROOT_DIR/isaac_sim.zip" ]; then
     gdown --id $ISAAC_SIM_ZIP_ID -O $ROOT_DIR/isaac_sim.zip
 fi
 if [ ! -f "$ROOT_DIR/drone_env.yml" ]; then
-    gdown --id $CONDA_ENV_YML_ID -O $ROOT_DIR/drone_env.yml
+    gdown --id $CONDA_ENV_ID -O $ROOT_DIR/drone_env.yml
 fi
 # Import Conda environment
 mkdir -p $ROOT_DIR/conda_envs
